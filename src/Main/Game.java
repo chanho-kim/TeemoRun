@@ -11,16 +11,21 @@ import java.awt.image.DataBufferInt;
 import javax.swing.JFrame;
 
 import Main.graphics.Screen;
+import Main.input.Keyboard;
+import Main.level.Level;
+import Main.level.RandomLevel;
 
 public class Game extends Canvas implements Runnable{
 
 	private static final long serialVersionUID = 1L;
-	public static int width = 300;
-	public static int height = 200;
-	public static int scale = 3;
+	public static int width = 1216;
+	public static int height = 832;
+	public static int scale = 1;
 	
 	private Thread thread;
 	private JFrame frame;
+	private Keyboard key;
+	private Level level;
 	private boolean running = false;
 	
 	private Screen screen;
@@ -33,6 +38,11 @@ public class Game extends Canvas implements Runnable{
 		setPreferredSize(size);
 		screen = new Screen(width, height);
 		frame = new JFrame();
+		
+		key = new Keyboard();
+		addKeyListener(key);
+		
+		level = new RandomLevel(19, 13);
 	}
 	
 	public synchronized void start() {
@@ -50,10 +60,37 @@ public class Game extends Canvas implements Runnable{
 	}
 
 	public void run() {
+		final double ns = 1000000000.0 / 60.0;
+		long lastTime = System.nanoTime();
+		double delta = 0;
+		
+		int frames = 0;
+		int updates = 0;
+		long timer = System.currentTimeMillis();
+		
+		requestFocus();
+		
+		//update happens 60 times a second, fps is not limited
 		while(running) {
-			update();
+			long now = System.nanoTime();
+			delta += (now-lastTime) / ns;
+			lastTime = now;
+			while (delta >= 1) {
+				update();
+				updates += 1;
+				delta -= 1;
+			}
 			render();
+			frames+=1;
+			
+			if(System.currentTimeMillis() - timer > 1000) {
+				timer += 1000;
+				frame.setTitle("TeemoRun | " + updates + " updates per sec, " + frames + " fps");
+				updates = 0;
+				frames = 0;
+			}
 		}
+		stop();
 	}
 	
 	private void render() {
@@ -65,7 +102,7 @@ public class Game extends Canvas implements Runnable{
 		}
 		
 		screen.clear();
-		screen.render();
+		level.render(screen);
 		
 		for (int i = 0; i< pixels.length; i++) {
 			pixels[i] = screen.pixels[i];
@@ -79,7 +116,7 @@ public class Game extends Canvas implements Runnable{
 	}
 
 	private void update() {
-		
+		key.update();
 	}
 
 	public static void main(String[] args) {
