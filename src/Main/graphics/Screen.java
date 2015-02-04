@@ -2,6 +2,8 @@ package Main.graphics;
 
 import java.util.Random;
 
+import Main.entity.items.Cookie;
+import Main.entity.mob.Player;
 import Main.level.tile.Tile;
 
 public class Screen {
@@ -32,6 +34,28 @@ public class Screen {
 		for (int y = 0; y < tile.sprite.SIZE; y+=1) {
 			for (int x = 0; x < tile.sprite.SIZE; x+=1) {
 				pixels[(xp+x) + (yp+y) * width] = tile.sprite.pixels[x+y*tile.sprite.SIZE];
+			}
+		}
+	}
+	
+	public void renderPlayer(int xp, int yp, Player player) {
+		for (int y = 0; y < 64; y+=1) {
+			for (int x = 0; x < 64; x+=1) {
+				//if pixel is NOT certain color, then display the pixels. otherwise just pass
+				if(player.sprite.pixels[x+y*player.sprite.SIZE] != 0xffff00ff) {
+					pixels[(xp+x) + (yp+y) * width] = player.sprite.pixels[x+y*player.sprite.SIZE];
+				}
+			}
+		}
+	}
+	
+	public void renderCookie(int xp, int yp, Cookie cookie) {
+		for (int y = 0; y < 64; y+=1) {
+			for (int x = 0; x < 64; x+=1) {
+				//if pixel is NOT certain color, then display the pixels. otherwise just pass
+				if(cookie.sprite.pixels[x+y*cookie.sprite.SIZE] != 0xffff00ff) {
+					pixels[(xp+x) + (yp+y) * width] = cookie.sprite.pixels[x+y*cookie.sprite.SIZE];
+				}
 			}
 		}
 	}

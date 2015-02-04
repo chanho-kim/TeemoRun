@@ -10,10 +10,12 @@ import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
 
+import Main.entity.mob.Player;
 import Main.graphics.Screen;
 import Main.input.Keyboard;
 import Main.level.Level;
 import Main.level.RandomLevel;
+import Main.level.RealLevel;
 
 public class Game extends Canvas implements Runnable{
 
@@ -26,6 +28,7 @@ public class Game extends Canvas implements Runnable{
 	private JFrame frame;
 	private Keyboard key;
 	private Level level;
+	private Player player;
 	private boolean running = false;
 	
 	private Screen screen;
@@ -42,7 +45,8 @@ public class Game extends Canvas implements Runnable{
 		key = new Keyboard();
 		addKeyListener(key);
 		
-		level = new RandomLevel(19, 13);
+		level = new RealLevel("/levels/level.png");
+		player = new Player(key,level);
 	}
 	
 	public synchronized void start() {
@@ -103,6 +107,7 @@ public class Game extends Canvas implements Runnable{
 		
 		screen.clear();
 		level.render(screen);
+		player.render(screen);
 		
 		for (int i = 0; i< pixels.length; i++) {
 			pixels[i] = screen.pixels[i];
@@ -117,6 +122,8 @@ public class Game extends Canvas implements Runnable{
 
 	private void update() {
 		key.update();
+		player.update();
+		level.update(player);
 	}
 
 	public static void main(String[] args) {

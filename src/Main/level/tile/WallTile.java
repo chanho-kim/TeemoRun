@@ -3,8 +3,8 @@ package Main.level.tile;
 import Main.graphics.Screen;
 import Main.graphics.Sprite;
 
-public class VoidTile extends Tile{
-	public VoidTile(Sprite sprite) {
+public class WallTile extends Tile{
+	public WallTile(Sprite sprite) {
 		super(sprite);
 	}
 

@@ -8,8 +8,8 @@ public class Tile {
 	public int x, y;
 	public Sprite sprite;
 	
-	public static Tile path = new PathTile(Sprite.teemoUp);
-	public static Tile voidTile = new VoidTile(Sprite.teemoLeft);
+	public static Tile path = new PathTile(Sprite.tile0);
+	public static Tile wallTile = new WallTile(Sprite.tile1);
 	
 	public Tile (Sprite sprite) {
 		this.sprite = sprite;
