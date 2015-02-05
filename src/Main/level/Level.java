@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 import Main.entity.items.Cookie;
 import Main.entity.mob.Player;
 import Main.graphics.Screen;
+import Main.level.graph.Graph;
 import Main.level.tile.Tile;
 
 public class Level {
@@ -14,6 +15,7 @@ public class Level {
 	protected Tile[] tiles;
 	public Rectangle[] collisionbox;
 	public Cookie[] cookies;
+	public Graph graph;
 	
 	public Level (int width, int height) {
 		this.width = width;

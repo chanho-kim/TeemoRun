@@ -12,6 +12,7 @@ public abstract class Mob extends Entity {
 	protected boolean moving = false;
 	public Rectangle hitbox;
 	
+	
 	public void move(int xm, int ym) {
 		if (xm > 0) dir = 1;
 		else if (xm < 0) dir = 3;

@@ -8,6 +8,9 @@ import javax.imageio.ImageIO;
 
 import Main.entity.items.Cookie;
 import Main.entity.mob.Player;
+import Main.level.graph.Direction;
+import Main.level.graph.Graph;
+import Main.level.graph.Vertex;
 import Main.level.tile.Tile;
 
 public class RealLevel extends Level {
@@ -21,6 +24,7 @@ public class RealLevel extends Level {
 	public void generateLevel() {
 		collisionbox = new Rectangle[levelPixels.length];
 		cookies = new Cookie[levelPixels.length];
+		graph = new Graph(levelPixels.length);
 		for (int i = 0; i < levelPixels.length; i+=1) {
 			if (levelPixels[i] == 0xff000000) {
 				tiles[i] = Tile.wallTile;
@@ -29,13 +33,41 @@ public class RealLevel extends Level {
 				collisionbox[i] = new Rectangle(x << 6,y << 6, 64, 64);
 			}
 			else if (levelPixels[i] == 0xffffffff) {
+				Vertex v;
+				boolean newVertex = false;
 				tiles[i] = Tile.path;
 				int y = i / 19;
 				int x = i % 19;
 				cookies[i] = new Cookie(x << 6,y << 6);
+				
+				if(graph.getVertex(i) != null) v = graph.getVertex(i);
+				else {
+					v = new Vertex(i);
+					newVertex = true;
+				}
+					
+				if(i-19 >= 0 && levelPixels[i] == 0xffffffff) v.setUp(graph.getVertex(i-19));
+				else v.setUp(null);
+				
+				if(i+19 < levelPixels.length && levelPixels[i+19] == 0xffffffff){
+					graph.addVertex(new Vertex(i+19), i+19);
+					v.setDown(graph.getVertex(i+19));
+				}
+				else v.setDown(null);
+				
+				if(i-1 >= 0 && levelPixels[i-1] == 0xffffffff) v.setLeft(graph.getVertex(i-1));
+				else v.setLeft(null);
+				
+				if(i+1 < levelPixels.length && levelPixels[i+1] == 0xffffffff){
+					graph.addVertex(new Vertex(i+1), i+1);
+					v.setRight(graph.getVertex(i+1));
+				}
+				
+				if(newVertex) graph.addVertex(v, i);	
 			}
 		}
-		System.out.println(levelPixels.length);
+		Direction dir = graph.BFS(80, graph.getVertex(20));
+		System.out.println("done making graph, check me!");
 	}
 		
 	protected void loadLevel(String path) {
@@ -62,7 +94,9 @@ public class RealLevel extends Level {
 			}
 		}
 		//if we finished collecting cookies, we're done!
-		if(done) {}
+		if(done) {
+			System.out.println("We're done");
+		}
 	}
 }
 
