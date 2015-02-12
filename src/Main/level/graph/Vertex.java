@@ -2,6 +2,7 @@ package Main.level.graph;
 
 public class Vertex {
 	public final int id;
+	private int level;
 	private Vertex up;
 	private Vertex down;
 	private Vertex left;
@@ -10,9 +11,15 @@ public class Vertex {
 	public Vertex(int id) {
 		this.id = id;
 	}
+
+	public Vertex(int id, int level) {
+		this.id = id;
+		this.level = level;
+	}	
 	
 	public Vertex(Vertex v) {
 		this.id = v.id;
+		this.level = v.level;
 		this.up = v.up;
 		this.down = v.down;
 		this.left = v.left;
@@ -58,5 +65,12 @@ public class Vertex {
 		return right;
 	}
 	
+	public void setLevel(int level) {
+		this.level = level;
+	}
+	
+	public int getLevel() {
+		return this.level;
+	}
 	
 }
