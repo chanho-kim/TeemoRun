@@ -161,10 +161,19 @@ public class Graph {
 			down = shortestPath(path, start.getDown().id, target);
 		}
 		
-		if(left != null && left.correctPath) return left;
+		int possible = 0;
+		int[] dir = new int[4];
+		if(left != null && left.correctPath){
+			dir[possible] = left.dir;
+			possible+=1;
+			return left;
+		}
 		else if(right != null && right.correctPath) return right;
 		else if(up != null && up.correctPath) return up;
 		else if(down != null && down.correctPath) return down;		
+		
+		
+		
 		
 		return new Direction(false, -1);		
 	}
