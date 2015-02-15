@@ -66,8 +66,6 @@ public class RealLevel extends Level {
 				if(newVertex) graph.addVertex(v, i);	
 			}
 		}
-		Direction dir = graph.BFS(80, graph.getVertex(20));
-		System.out.println("done making graph, check me!");
 	}
 		
 	protected void loadLevel(String path) {
@@ -87,6 +85,12 @@ public class RealLevel extends Level {
 	
 	public void update(Player player) {
 		boolean done = true;
+		
+		playerPos = ((player.x + 31)/64) + (((player.y+31)/64)*19);
+		
+		Direction dir = graph.BFS(playerPos, 20);
+		System.out.println(playerPos + "/" + dir.getDirection());
+		
 		for (int i = 0; i < cookies.length; i+=1) {
 			if(cookies[i] != null) {
 				if(cookies[i].hitbox.intersects(player.hitbox)) cookies[i] = null;

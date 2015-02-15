@@ -19,4 +19,8 @@ public class Direction {
 		dir = b;
 		distance = c;
 	}
+	
+	public int getDirection() {
+		return dir;
+	}
 }

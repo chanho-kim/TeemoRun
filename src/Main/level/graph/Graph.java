@@ -4,6 +4,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Random;
 
 public class Graph {
 	private Vertex[] vertices;
@@ -12,6 +13,7 @@ public class Graph {
 	private Graph path;
 	private int size;
 	private int index;
+	private Random random = new Random();
 	
 	public Graph(int size){
 		this.index = 0;
@@ -33,7 +35,7 @@ public class Graph {
 		else return null;
 	}
 	
-	public Direction BFS(int start, Vertex target) {
+	public Direction BFS(int start, int target) {
 		Graph path = new Graph(size);
 		ArrayDeque<Vertex> queue = new ArrayDeque<Vertex>(size);
 		checked[start] = true;
@@ -43,7 +45,7 @@ public class Graph {
 		
 		while(!queue.isEmpty()){			
 			Vertex parent = queue.remove();
-			if(parent.id == target.id){
+			if(parent.id == target){
 				path.addVertex(parent);
 				shortestPathCheck = new boolean[size];
 				Direction dir = shortestPath(path, parent.id, start);
@@ -91,90 +93,59 @@ public class Graph {
 		return null;
 	}
 
-
-/*	private Direction shortestPath(Graph path, int index, Vertex target, int distance){		
-		if(!shortestPathCheck[index]){
-			Vertex v = path.getVertex(index);
-			if(v == null) return new Direction(false, -1);
-			shortestPathCheck[index] = true;
-			if(v.id == target.id){
-				shortestPathCheck[index] = false;
-				return new Direction(true, -1, distance);
-			}		
-			if(!v.equals(target)){
-				Direction down, up, left, right;
-				down = up = left = right = new Direction(false, -1);
-				
-				if(v.getDown() != null) {
-					down = shortestPath(path, v.getDown().id, target, distance+1);
-				}
-				
-				if(v.getUp() != null) {
-					up = shortestPath(path, v.getUp().id, target, distance+1);		
-				}
-				
-				if(v.getLeft() != null) {
-					left = shortestPath(path, v.getLeft().id, target, distance+1);
-				}
-				
-				if(v.getRight() != null) {
-					right = shortestPath(path, v.getRight().id, target, distance+1);
-				}
-				
-				if(!down.correctPath && !up.correctPath && !left.correctPath && !right.correctPath) return new Direction(false, -1);
-				else{
-					int dir = Math.min(Math.min(down.distance, up.distance), Math.min(left.distance, right.distance));
-					if(dir == down.distance) return new Direction(true, 2, distance);
-					if(dir == up.distance) return new Direction(true, 0, distance);
-					if(dir == left.distance) return new Direction(true, 3, distance);
-					if(dir == right.distance) return new Direction(true, 1, distance);
-				}
-			}
-		}
-		else return new Direction(false, -1);
-		return null;
-	}*/
-	
 	private Direction shortestPath(Graph path, int parentID, int target){		
 		Direction left,right,up,down;
 		left = right = up = down = null;
 		Vertex start = path.getVertex(parentID);
 		int endLevel = start.getLevel();
 		
-		if(start.getLeft() != null && path.getVertex(start.getLeft().id).getLevel() < endLevel){
+		if(start.getLeft() != null && path.getVertex(start.getLeft().id) != null && path.getVertex(start.getLeft().id).getLevel() < endLevel){
 			if(start.getLeft().id == target) return new Direction(true, 1);
 			left = shortestPath(path, start.getLeft().id, target);
 		}
 		
-		if(start.getRight() != null && path.getVertex(start.getRight().id).getLevel() < endLevel){
+		if(start.getRight() != null && path.getVertex(start.getRight().id) != null && path.getVertex(start.getRight().id).getLevel() < endLevel){
 			if(start.getRight().id == target) return new Direction(true, 3);
 			right = shortestPath(path, start.getRight().id, target);
 		}		
 		
-		if(start.getUp() != null && path.getVertex(start.getUp().id).getLevel() < endLevel){
+		if(start.getUp() != null && path.getVertex(start.getUp().id) != null && path.getVertex(start.getUp().id).getLevel() < endLevel){
 			if(start.getUp().id == target) return new Direction(true, 2);
 			up = shortestPath(path, start.getUp().id, target);
 		}
 		
-		if(start.getDown() != null && path.getVertex(start.getDown().id).getLevel() < endLevel){
+		if(start.getDown() != null && path.getVertex(start.getDown().id) != null && path.getVertex(start.getDown().id).getLevel() < endLevel){
 			if(start.getDown().id == target) return new Direction(true, 0);
 			down = shortestPath(path, start.getDown().id, target);
 		}
 		
 		int possible = 0;
+		boolean pathExists = false;
 		int[] dir = new int[4];
 		if(left != null && left.correctPath){
 			dir[possible] = left.dir;
 			possible+=1;
-			return left;
+			pathExists = true;
 		}
-		else if(right != null && right.correctPath) return right;
-		else if(up != null && up.correctPath) return up;
-		else if(down != null && down.correctPath) return down;		
-		
-		
-		
-		
-		return new Direction(false, -1);		
+		if(right != null && right.correctPath){
+			dir[possible] = right.dir;
+			possible+=1;
+			pathExists = true;
+		}
+		if(up != null && up.correctPath){
+			dir[possible] = up.dir;
+			possible+=1;
+			pathExists = true;
+		}
+		if(down != null && down.correctPath){
+			dir[possible] = down.dir;
+			possible+=1;
+			pathExists = true;
+		}
+
+		if(pathExists){
+			return new Direction(true, dir[random.nextInt(possible)]);
+		}
+		else return new Direction(false, -1);		
 	}
 }

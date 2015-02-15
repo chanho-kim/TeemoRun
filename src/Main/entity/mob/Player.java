@@ -13,6 +13,7 @@ public class Player extends Mob {
 	private int anim = 0;
 	private boolean walking = false;
 	
+	
 	public Player(Keyboard input, Level level) {
 		x = 576;
 		y = 384;

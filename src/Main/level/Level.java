@@ -16,6 +16,7 @@ public class Level {
 	public Rectangle[] collisionbox;
 	public Cookie[] cookies;
 	public Graph graph;
+	public int playerPos;
 	
 	public Level (int width, int height) {
 		this.width = width;
