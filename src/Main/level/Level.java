@@ -3,6 +3,7 @@ package Main.level;
 import java.awt.Rectangle;
 
 import Main.entity.items.Cookie;
+import Main.entity.mob.Monster;
 import Main.entity.mob.Player;
 import Main.graphics.Screen;
 import Main.level.graph.Graph;
@@ -16,6 +17,7 @@ public class Level {
 	public Rectangle[] collisionbox;
 	public Cookie[] cookies;
 	public Graph graph;
+	protected Monster[] monsters;
 	public int playerPos;
 	
 	public Level (int width, int height) {
@@ -58,6 +60,10 @@ public class Level {
 				cookies[i].render(screen);
 			}
 		}
+		for (int i = 0; i < monsters.length; i+=1) {
+			monsters[i].render(screen);
+		}
+		
 	}
 	
 	public Tile getTile(int x, int y) {

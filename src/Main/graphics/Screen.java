@@ -3,6 +3,7 @@ package Main.graphics;
 import java.util.Random;
 
 import Main.entity.items.Cookie;
+import Main.entity.mob.Monster;
 import Main.entity.mob.Player;
 import Main.level.tile.Tile;
 
@@ -44,6 +45,17 @@ public class Screen {
 				//if pixel is NOT certain color, then display the pixels. otherwise just pass
 				if(player.sprite.pixels[x+y*player.sprite.SIZE] != 0xffff00ff) {
 					pixels[(xp+x) + (yp+y) * width] = player.sprite.pixels[x+y*player.sprite.SIZE];
+				}
+			}
+		}
+	}
+	
+	public void renderMonster(int xp, int yp, Monster monster) {
+		for (int y = 0; y < 64; y+=1) {
+			for (int x = 0; x < 64; x+=1) {
+				//if pixel is NOT certain color, then display the pixels. otherwise just pass
+				if(monster.sprite.pixels[x+y*monster.sprite.SIZE] != 0xffff00ff) {
+					pixels[(xp+x) + (yp+y) * width] = monster.sprite.pixels[x+y*monster.sprite.SIZE];
 				}
 			}
 		}

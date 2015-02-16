@@ -7,7 +7,9 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import Main.entity.items.Cookie;
+import Main.entity.mob.Monster;
 import Main.entity.mob.Player;
+import Main.graphics.Sprite;
 import Main.level.graph.Direction;
 import Main.level.graph.Graph;
 import Main.level.graph.Vertex;
@@ -19,9 +21,16 @@ public class RealLevel extends Level {
 	
 	public RealLevel(String path) {
 		super(path);
+
 	}
 	
 	public void generateLevel() {
+		monsters = new Monster[4];
+		monsters[0] = new Monster(64,64,Sprite.teemoDown2,this);
+		monsters[1] = new Monster(64,64,Sprite.teemoDown2,this);
+		monsters[2] = new Monster(64,64,Sprite.teemoDown2,this);
+		monsters[3] = new Monster(64,64,Sprite.teemoDown2,this);
+		
 		collisionbox = new Rectangle[levelPixels.length];
 		cookies = new Cookie[levelPixels.length];
 		graph = new Graph(levelPixels.length);
@@ -88,9 +97,29 @@ public class RealLevel extends Level {
 		
 		playerPos = ((player.x + 31)/64) + (((player.y+31)/64)*19);
 		
-		Direction dir = graph.BFS(playerPos, 20);
-		System.out.println(playerPos + "/" + dir.getDirection());
+		for(int x = 1; x < 18; x+=1) {
+			int xPos = x * 64;
+			for(int y = 1; y < 12 ; y+=1) {
+				int yPos = y * 64;
+				for(int i = 0; i<monsters.length; i+=1){
+					if(monsters[i].x == xPos && monsters[i].y == yPos) {
+						monsters[i].monsterReady = true;
+						monsters[i].monsterPos = x + (y*19);
+					}
+				}
+			}
+		}
 		
+		Direction dir = graph.BFS(21, 123);
+		System.out.print(dir.getDirection() + " ");
+		dir = graph.BFS(78, 123);
+		System.out.println(dir.getDirection());
+		
+		for(int i = 0; i < monsters.length; i+=1){
+			Direction monsterDir = graph.BFS(monsters[i].monsterPos, playerPos);
+			monsters[i].update(monsterDir.getDirection());
+		}
+				
 		for (int i = 0; i < cookies.length; i+=1) {
 			if(cookies[i] != null) {
 				if(cookies[i].hitbox.intersects(player.hitbox)) cookies[i] = null;
