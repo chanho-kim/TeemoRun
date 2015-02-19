@@ -3,10 +3,10 @@ package Main.level.graph;
 public class Vertex {
 	public final int id;
 	private int level;
-	private Vertex up;
-	private Vertex down;
-	private Vertex left;
-	private Vertex right;
+	private int up;
+	private int down;
+	private int left;
+	private int right;
 	
 	public Vertex(int id) {
 		this.id = id;
@@ -26,42 +26,36 @@ public class Vertex {
 		this.right = v.right;
 	}
 	
-	void link(Vertex up, Vertex down, Vertex left, Vertex right) {
-		this.up = up;
-		this.down = down;
-		this.left = left;
-		this.right = right;
-	}
 	
-	public void setUp(Vertex v) {
+	public void setUp(int v) {
 		up = v;
 	}
 	
-	public void setDown(Vertex v) {
+	public void setDown(int v) {
 		down = v;
 	}
 	
-	public void setLeft(Vertex v) {
+	public void setLeft(int v) {
 		left = v;
 	}
 	
-	public void setRight(Vertex v) {
+	public void setRight(int v) {
 		right = v;
 	}
 	
-	public Vertex getUp() {
+	public int getUp() {
 		return up;
 	}
 
-	public Vertex getDown() {
+	public int getDown() {
 		return down;
 	}
 	
-	public Vertex getLeft() {
+	public int getLeft() {
 		return left;
 	}
 	
-	public Vertex getRight() {
+	public int getRight() {
 		return right;
 	}
 	

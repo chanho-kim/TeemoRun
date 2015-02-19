@@ -48,27 +48,39 @@ public class Player extends Mob {
 	
 	public void render(Screen screen) {
 		if(dir==0) {
-			sprite = Sprite.teemoUp;
+			sprite = Sprite.DeemoUp;
 			if (walking && anim % 20 > 10) {
-				sprite = Sprite.teemoUp2;
+				sprite = Sprite.DeemoUp2;
 			}
 		}
 		else if(dir==1) {
-			sprite = Sprite.teemoRight;
-			if (walking && anim % 20 > 10) {
-				sprite = Sprite.teemoRight2;
+			sprite = Sprite.DeemoRight;
+			if (walking && anim % 40 > 30) {
+				sprite = Sprite.DeemoRight2;
+			}
+			else if (walking && anim % 40 > 20) {
+				sprite = Sprite.DeemoRight3;
+			}
+			else if (walking && anim % 40 > 10) {
+				sprite = Sprite.DeemoRight4;
 			}
 		}
 		else if(dir==2) {
-			sprite = Sprite.teemoDown;
+			sprite = Sprite.DeemoDown;
 			if (walking && anim % 20 > 10) {
-				sprite = Sprite.teemoDown2;
+				sprite = Sprite.DeemoDown2;
 			}
 		}
 		else if(dir==3) {
-			sprite = Sprite.teemoLeft;
-			if (walking && anim % 20 > 10) {
-				sprite = Sprite.teemoLeft2;
+			sprite = Sprite.DeemoLeft;
+			if (walking && anim % 40 > 30) {
+				sprite = Sprite.DeemoLeft2;
+			}
+			else if (walking && anim % 40 > 20) {
+				sprite = Sprite.DeemoLeft3;
+			}
+			else if (walking && anim % 40 > 10) {
+				sprite = Sprite.DeemoLeft4;
 			}
 		}
 		screen.renderPlayer(x, y, this);

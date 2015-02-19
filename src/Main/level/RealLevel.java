@@ -3,6 +3,7 @@ package Main.level;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 
@@ -18,6 +19,7 @@ import Main.level.tile.Tile;
 public class RealLevel extends Level {
 
 	private int[] levelPixels;
+	private Random random = new Random();
 	
 	public RealLevel(String path) {
 		super(path);
@@ -26,10 +28,10 @@ public class RealLevel extends Level {
 	
 	public void generateLevel() {
 		monsters = new Monster[4];
-		monsters[0] = new Monster(64,64,Sprite.teemoDown2,this);
-		monsters[1] = new Monster(64,64,Sprite.teemoDown2,this);
-		monsters[2] = new Monster(64,64,Sprite.teemoDown2,this);
-		monsters[3] = new Monster(64,64,Sprite.teemoDown2,this);
+		monsters[0] = new Monster(192,128,Sprite.teemoDown2,this);
+		monsters[1] = new Monster(960,128,Sprite.teemoDown2,this);
+		monsters[2] = new Monster(192,640,Sprite.teemoDown2,this);
+		monsters[3] = new Monster(960,640,Sprite.teemoDown2,this);
 		
 		collisionbox = new Rectangle[levelPixels.length];
 		cookies = new Cookie[levelPixels.length];
@@ -55,22 +57,23 @@ public class RealLevel extends Level {
 					newVertex = true;
 				}
 					
-				if(i-19 >= 0 && levelPixels[i] == 0xffffffff) v.setUp(graph.getVertex(i-19));
-				else v.setUp(null);
+				if(i-19 >= 0 && levelPixels[i-19] == 0xffffffff) v.setUp(i-19);
+				else v.setUp(-1);
 				
 				if(i+19 < levelPixels.length && levelPixels[i+19] == 0xffffffff){
 					graph.addVertex(new Vertex(i+19), i+19);
-					v.setDown(graph.getVertex(i+19));
+					v.setDown(i+19);
 				}
-				else v.setDown(null);
+				else v.setDown(-1);
 				
-				if(i-1 >= 0 && levelPixels[i-1] == 0xffffffff) v.setLeft(graph.getVertex(i-1));
-				else v.setLeft(null);
+				if(i-1 >= 0 && levelPixels[i-1] == 0xffffffff) v.setLeft(i-1);
+				else v.setLeft(-1);
 				
 				if(i+1 < levelPixels.length && levelPixels[i+1] == 0xffffffff){
 					graph.addVertex(new Vertex(i+1), i+1);
-					v.setRight(graph.getVertex(i+1));
+					v.setRight(i+1);
 				}
+				else v.setRight(-1);
 				
 				if(newVertex) graph.addVertex(v, i);	
 			}
@@ -109,14 +112,30 @@ public class RealLevel extends Level {
 				}
 			}
 		}
-		
-		Direction dir = graph.BFS(21, 123);
-		System.out.print(dir.getDirection() + " ");
-		dir = graph.BFS(78, 123);
-		System.out.println(dir.getDirection());
-		
+	
 		for(int i = 0; i < monsters.length; i+=1){
-			Direction monsterDir = graph.BFS(monsters[i].monsterPos, playerPos);
+			Direction monsterDir;
+			int x = monsters[i].x - 128;
+			int y = monsters[i].y - 128;
+			
+			Rectangle range = new Rectangle(x,y,320,320);
+			
+			if(player.hitbox.intersects(range)){
+				monsterDir = graph.BFS(monsters[i].monsterPos, playerPos);
+			}
+			else{
+				int randomDirection = 0;
+				boolean goodPath = false;
+				while(!goodPath){
+					randomDirection = random.nextInt(4);
+					if(randomDirection == 0 && levelPixels[monsters[i].monsterPos-19] == 0xffffffff) break; 
+					else if(randomDirection == 1 && levelPixels[monsters[i].monsterPos+1] == 0xffffffff) break;
+					else if(randomDirection == 2 && levelPixels[monsters[i].monsterPos+19] == 0xffffffff) break;
+					else if(randomDirection == 3 && levelPixels[monsters[i].monsterPos-1] == 0xffffffff) break; 
+				}
+				monsterDir = new Direction(true, randomDirection);
+			}
+			
 			monsters[i].update(monsterDir.getDirection());
 		}
 				
